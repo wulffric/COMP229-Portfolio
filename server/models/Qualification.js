@@ -2,13 +2,15 @@ import mongoose from "mongoose";
 
 const qualificationSchema = new mongoose.Schema(
   {
-    degree:    { type: String, required: true, trim: true },
-    school:    { type: String, required: true, trim: true },
-    startYear: { type: Number },
-    endYear:   { type: Number },
-    details:   { type: String, trim: true }
+    title: { type: String, required: true, trim: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName:  { type: String, required: true, trim: true },
+    email:     { type: String, required: true, trim: true, lowercase: true },
+    completion:{ type: Date,   required: true },
+    description:{type: String, required: true, trim: true }
   },
   { timestamps: true }
 );
 
-export default mongoose.models.Qualification || mongoose.model("Qualification", qualificationSchema);
+export default mongoose.models.Qualification
+  || mongoose.model("Qualification", qualificationSchema);
