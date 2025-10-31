@@ -1,42 +1,58 @@
-import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
-export async function register(req, res) {
+export const getAll = async (_req, res) => {
   try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password)
-      return res.status(400).json({ message: "name, email, password required" });
-
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ message: "Email already in use" });
-
-    const user = await User.create({ name, email, password });
-    res.status(201).json({ user: { id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const items = await User.find({});
+    res.status(200).json(items);
+  } catch {
+    res.status(500).json({ message: "Failed to fetch users" });
   }
-}
+};
 
-export async function login(req, res) {
+export const getById = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-    const ok = await user.comparePassword(password);
-    if (!ok) return res.status(400).json({ message: "Invalid credentials" });
-
-    const token = signToken(user._id);
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const item = await User.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: "Not found" });
+    res.status(200).json(item);
+  } catch {
+    res.status(400).json({ message: "Invalid ID" });
   }
-}
+};
 
-export async function getAllUsers(_req, res) {
-  const users = await User.find().select("-password").lean();
-  res.json(users);
-}
+export const create = async (req, res) => {
+  try {
+    const item = await User.create(req.body);
+    res.status(201).json(item);
+  } catch (err) {
+    res.status(400).json({ message: "Validation error", details: err.message });
+  }
+};
+
+export const update = async (req, res) => {
+  try {
+    const item = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!item) return res.status(404).json({ message: "Not found" });
+    res.status(200).json(item);
+  } catch {
+    res.status(400).json({ message: "Invalid ID or data" });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const item = await User.findByIdAndDelete(req.params.id);
+    if (!item) return res.status(404).json({ message: "Not found" });
+    res.sendStatus(204);
+  } catch {
+    res.status(400).json({ message: "Invalid ID" });
+  }
+};
+
+export const removeAll = async (_req, res) => {
+  try {
+    await User.deleteMany({});
+    res.sendStatus(204);
+  } catch {
+    res.status(500).json({ message: "Failed to delete all" });
+  }
+};

@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { register, login, getAllUsers } from "../controllers/userController.js";
-import { requireAuth } from "../middleware/auth.js";
+import * as u from "../controllers/userController.js";
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/", requireAuth, getAllUsers); // optional admin/testing
+router.get("/", u.getAll);
+router.get("/:id", u.getById);
+router.post("/", u.create);
+router.put("/:id", u.update);
+router.delete("/:id", u.remove);
+router.delete("/", u.removeAll);
 
 export default router;
