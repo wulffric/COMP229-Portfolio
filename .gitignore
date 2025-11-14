@@ -1,17 +1,39 @@
-# Ignore node_modules everywhere
+# Dependencies
 node_modules/
 
-# Ignore build folders
+# Environment variables
+.env
+*.env
+server/.env
+
+# Build outputs
 dist/
 build/
 
-# Ignore environment files
-.env
-*.env
-
-# Ignore local folders not meant for submission
+# Local folders not meant for submission
 not now/
 
-# Ignore OS/system files
+# System files
 .DS_Store
 Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# History folder
+.history/
