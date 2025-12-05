@@ -17,6 +17,9 @@ export default function Home() {
         <p style={{ maxWidth: "600px" }}>
           Mission: To create clean, modern, and responsive web applications.
         </p>
+        <p style={{ maxWidth: "600px" }}>
+          This content was added for the CI/CD test.
+        </p>
       </div>
     </PageWrapper>
   );
